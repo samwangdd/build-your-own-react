@@ -13,7 +13,26 @@ export function render(element,container) {
     });
 
   // 递归 children
-  element.props.children.forEach(child => render(child, dom))
+  // element.props.children.forEach(child => render(child, dom))
+  let nextUnitWork = null;
+  
+  function workLoop(deadline){
+    let shouldYield = false;
+    while(nextUnitWork && !shouldYield){
+      nextUnitWork = performUnitOfWork(nextUnitWork);
+      shouldYield = deadline.timeRemaining() < 1;
+    }
+    
+    requestIdleCallback(workLoop); // 循环调用
+  }
+
+  requestIdleCallback(workLoop);
+
+  function performUnitOfWork(nestUnitOfWork){
+    if(nestUnitOfWork.isComplete){
+      return nestUnitOfWork.sibling;
+    }
+  }
   
   // 将新节点添加到 container
   container.appendChild(dom);
