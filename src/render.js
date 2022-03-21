@@ -19,9 +19,9 @@ function createDom(fiber) {
 }
 
 function performUnitOfWork(fiber) {
-  // TODO: add dom node
+  // Step1: create dom node
   // 将这个 DOM node 保存在 fiber.dom 属性中以持续跟踪
-  // 创建
+  // 创建 DOM
   if (!fiber.dom) {
     fiber.dom = createDom(fiber)
   }
@@ -32,7 +32,8 @@ function performUnitOfWork(fiber) {
   // }
   // 渲染阶段会被中断，如果处理一个 unit 就挂载，用户将会看到不完整的 UI
 
-  // TODO: create new fibers
+  // Step2: create new fibers
+  // 将会创建子节点的 fiber
   const elements = fiber.props.children
   let index = 0
   let prevSibling = null
@@ -41,7 +42,7 @@ function performUnitOfWork(fiber) {
     const element = elements[index]
     // fiber 的结构
     const newFiber = {
-      dom: null, // FIXME: dom 表示什么？
+      dom: null, // dom 指通过 fiber 创建的当前元素对应的 DOM；如果不存在，会通过 createDom 创建
       props: element.props,
       type: element.type,
       parent: fiber,
@@ -59,16 +60,20 @@ function performUnitOfWork(fiber) {
     index++
   }
 
-  // TODO: return next unit of work（fiber）
+  // Step3: return next unit of work（fiber）
   // 如果有 child 节点（上面已赋值）
   if (fiber.child) {
     return fiber.child
   }
   let nextFiber = fiber
+  // 将会一直查找
+  // FIXME: 怎么实现深度优先遍历？
   while (nextFiber) {
     if (nextFiber.sibling) {
       return nextFiber.sibling
     }
+    // FIXME: 怎么找父节点的兄弟节点？
+    // 会执行 while 遍历，如果 parent 存在 sibling，则会返回
     nextFiber = nextFiber.parent // 如果是 Root 节点，nextFiber 为 undefined
   }
 }
@@ -90,7 +95,7 @@ function commitWork(fiber) {
 }
 
 export function render(element, container) {
-  // 将工作单元设置为 Fiber Tree 的根节点
+  // 将 Fiber Tree 的根节点设置为工作单元
   wipRoot = {
     dom: container,
     props: {
