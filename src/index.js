@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-export * from './createElement';
-export * from './render';
-=======
 function createElement(type, props, ...children) {
   return {
     type,
@@ -53,4 +49,3 @@ const element = (
 );
 const container = document.getElementById("root");
 Didact.render(element, container);
->>>>>>> dcd012fed088fc6c6f65a66bb060cab10b32e1c7

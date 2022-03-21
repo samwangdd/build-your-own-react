@@ -13,9 +13,6 @@ export function render(element,container) {
     });
 
   // 递归 children
-<<<<<<< HEAD
-  element.props.children.forEach(child => render(child, dom))
-=======
   // element.props.children.forEach(child => render(child, dom))
   let nextUnitWork = null;
   
@@ -36,7 +33,6 @@ export function render(element,container) {
       return nestUnitOfWork.sibling;
     }
   }
->>>>>>> dcd012fed088fc6c6f65a66bb060cab10b32e1c7
   
   // 将新节点添加到 container
   container.appendChild(dom);
